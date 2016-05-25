@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Films[0].Popularity)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Films[0].StoryLine)
+            @Html.DisplayNameFor(model => model.Films[0].Description)
         </th>
         <th></th>
     </tr>
@@ -38,11 +38,11 @@
             @Html.DisplayFor(modelItem => item.Popularity)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.StoryLine)
+            @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink(" Edit ", "Edit", new { id=item.ID })
+            @*@Html.ActionLink("Details", "Details", new { id=item.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })*@
         </td>
     </tr>

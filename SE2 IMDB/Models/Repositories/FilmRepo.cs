@@ -12,7 +12,8 @@ namespace SE2_IMDB.Models.Repositories
     {
         public static List<Film> GetFilms()
         {
-            string sql = "SELECT * FROM FILM ORDER BY POPULARITY";
+            List<Film> Films = new List<Film>();
+            string sql = "SELECT * FROM FILM ORDER BY POPULARITY DESC";
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
             {
                 conn.Open();
@@ -22,21 +23,108 @@ namespace SE2_IMDB.Models.Repositories
                     {
                         using (OracleDataReader r = cmd.ExecuteReader())
                         {
+                            
                             while (r.Read())
                             {
-                                yield new Film(r["FILMID"].ToInt(),r["RELEASEYEAR")
+                                Films.Add(new Film(r["FILMID"], r["TITLE"],r["DESCRIPTION"],
+                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"]));
                             }
-                            //    return new Comment(id, reader["COMMENTTEXT"].ToString(), reader["COMMENTER"].ToString());
-                            //else return new Comment(-1, "COMMENT NOT FOUND", "NULL");
                         }
                     }
                     catch (OracleException)
                     {
-                        return new Comment(-1, "COMMENT NOT FOUND", "NULL");
+                        return Films;
                     }
                 }
             }
+            return Films;
+        }
 
+        public static Film GetFilm(int ID)
+        {
+            Film film = new Film();
+            string sql = "SELECT * FROM FILM WHERE FILMID = :ID";
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(sql, conn))
+                {
+                    try
+                    {
+                        cmd.Parameters.Add(new OracleParameter("ID", ID));
+                        using (OracleDataReader r = cmd.ExecuteReader())
+                        {
+
+                            if (r.Read())
+                            {
+                                film = new Film(r["FILMID"], r["TITLE"], r["DESCRIPTION"],
+                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"]);
+                            }
+                        }
+                    }
+                    catch (OracleException)
+                    {
+                        return film;
+                    }
+                }
+            }
+            return film;
+        }
+
+        public static bool CreateFilm(Film film)
+        {
+            string sql = "INSERT INTO FILM (TITLE,DESCRIPTION,RELEASEYEAR,STORYLINE) VALUES (:title, :description, :releaseyear, :storyline)";
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(sql, conn))
+                {
+                    try
+                    {
+                        cmd.Parameters.Add(new OracleParameter("title", film.Title));
+                        cmd.Parameters.Add(new OracleParameter("description", film.Description));
+                        cmd.Parameters.Add(new OracleParameter("releaseyear", film.ReleaseYear));
+                        cmd.Parameters.Add(new OracleParameter("storyline", film.StoryLine));
+                        cmd.Prepare();
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (OracleException)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public static bool UpdateFilm(Film film)
+        {
+            //string sql =
+            //    "UPDATE FILM SET TITLE=:title, DESCRIPTION=:description, RELEASEYEAR=:releaseyear, STORYLINE=:storyline WHERE FILMID=:ID";
+            string sql =
+                "UPDATE FILM SET TITLE='testtitle', DESCRIPTION='testdesc', RELEASEYEAR='2000', STORYLINE='teststory' WHERE FILMID=:ID";
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(sql, conn))
+                {
+                    try
+                    {
+                        cmd.Parameters.Add(new OracleParameter("ID", film.ID.ToString()));
+                        cmd.Parameters.Add(new OracleParameter("title", film.Title));
+                        cmd.Parameters.Add(new OracleParameter("description", film.Description));
+                        cmd.Parameters.Add(new OracleParameter("releaseyear", film.ReleaseYear.ToString()));
+                        cmd.Parameters.Add(new OracleParameter("storyline", film.StoryLine));
+                        cmd.Prepare();
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (OracleException)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
     }
 }
