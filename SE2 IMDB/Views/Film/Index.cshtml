@@ -1,4 +1,4 @@
-﻿@model SE2_IMDB.Models.ViewModels.Film.FilmList
+﻿@model SE2_IMDB.Models.ViewModels.FilmList
 
 @{
     ViewBag.Title = "Index";
@@ -9,7 +9,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table table-hover" >
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Films[0].Title)
@@ -27,7 +27,7 @@
     </tr>
 
 @foreach (var item in Model.Films) {
-    <tr>
+    <tr style="cursor: pointer;" onclick="location.href='@Url.Action("Details", "Film", new { id=item.ID })'" >
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
@@ -42,8 +42,6 @@
         </td>
         <td>
             @Html.ActionLink(" Edit ", "Edit", new { id=item.ID })
-            @*@Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })*@
         </td>
     </tr>
 }

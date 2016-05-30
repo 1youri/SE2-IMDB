@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SE2_IMDB.Models.Entity;
 using SE2_IMDB.Models;
-using SE2_IMDB.Models.ViewModels.Film;
+using SE2_IMDB.Models.ViewModels;
 
 namespace SE2_IMDB.Controllers
 {
@@ -29,30 +30,48 @@ namespace SE2_IMDB.Controllers
         [HttpPost]
         public ActionResult Create(Film film)
         {
-            if(Models.Repositories.FilmRepo.CreateFilm(film)) return RedirectToAction("Index");
+            if(ModelState.IsValid) if(Models.Repositories.FilmRepo.CreateFilm(film)) return RedirectToAction("Index");
             return View();
         }
 
         // GET: Film/Edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id = 0)
         {
-            Film film = Models.Repositories.FilmRepo.GetFilm(id);
+            Film film;
+            if (id != -1) film = Models.Repositories.FilmRepo.GetFilm(id);
+            else film = new Film() {ID = -1};
             return View(film);
         }
 
         // POST: Film/Edit
         [HttpPost]
-        public ActionResult Edit(Film film)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Film film, HttpPostedFileBase upload)
         {
-            if (Models.Repositories.FilmRepo.UpdateFilm(film)) return RedirectToAction("Index");
-            else
+            if (ModelState.IsValid)
             {
-                List<string> Errors = new List<string>();
-                if (film.ReleaseYear < 0 || film.ReleaseYear > DateTime.Now.Year + 50)
-                    Errors.Add("Releaseyear entered incorrectly/impossible");
-                return View();
+                if (upload != null && upload.ContentLength > 0)
+                {
+                    string filePath = Path.Combine(HttpContext.Server.MapPath("../../Uploads/Films"),
+                                           Path.GetFileName(upload.FileName));
+                    upload.SaveAs(filePath);
+                    film.ImagePath = upload.FileName;
+                }
+                if (Models.Repositories.FilmRepo.UpdateFilm(film))
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            
+
+            return View();
+        }
+
+        public ActionResult Details(int id = 0)
+        {
+            Film film;
+            if (id != -1) film = Models.Repositories.FilmRepo.GetFilm(id);
+            else film = new Film() { ID = -1 };
+            return View(film);
         }
 
     }

@@ -27,7 +27,7 @@ namespace SE2_IMDB.Models.Repositories
                             while (r.Read())
                             {
                                 Films.Add(new Film(r["FILMID"], r["TITLE"],r["DESCRIPTION"],
-                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"]));
+                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"],r["PICTURE"]));
                             }
                         }
                     }
@@ -40,9 +40,9 @@ namespace SE2_IMDB.Models.Repositories
             return Films;
         }
 
-        public static Film GetFilm(int ID)
+        public static Film GetFilm(int id)
         {
-            Film film = new Film();
+            Film film = new Film() {ID = id*-1};
             string sql = "SELECT * FROM FILM WHERE FILMID = :ID";
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
             {
@@ -51,14 +51,14 @@ namespace SE2_IMDB.Models.Repositories
                 {
                     try
                     {
-                        cmd.Parameters.Add(new OracleParameter("ID", ID));
+                        cmd.Parameters.Add(new OracleParameter("ID", id));
                         using (OracleDataReader r = cmd.ExecuteReader())
                         {
 
                             if (r.Read())
                             {
                                 film = new Film(r["FILMID"], r["TITLE"], r["DESCRIPTION"],
-                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"]);
+                                    r["RELEASEYEAR"], r["POPULARITY"], r["STORYLINE"], r["PICTURE"]);
                             }
                         }
                     }
@@ -102,7 +102,7 @@ namespace SE2_IMDB.Models.Repositories
             //string sql =
             //    "UPDATE FILM SET TITLE=:title, DESCRIPTION=:description, RELEASEYEAR=:releaseyear, STORYLINE=:storyline WHERE FILMID=:ID";
             string sql =
-                "UPDATE FILM SET TITLE='testtitle', DESCRIPTION='testdesc', RELEASEYEAR='2000', STORYLINE='teststory' WHERE FILMID=:ID";
+                "UPDATE FILM SET TITLE=:title, DESCRIPTION=:description, RELEASEYEAR=:releaseyear, STORYLINE=:storyline, PICTURE=:picture WHERE FILMID=:filmID";
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["OracleConnection"].ToString()))
             {
                 conn.Open();
@@ -110,11 +110,13 @@ namespace SE2_IMDB.Models.Repositories
                 {
                     try
                     {
-                        cmd.Parameters.Add(new OracleParameter("ID", film.ID.ToString()));
                         cmd.Parameters.Add(new OracleParameter("title", film.Title));
                         cmd.Parameters.Add(new OracleParameter("description", film.Description));
-                        cmd.Parameters.Add(new OracleParameter("releaseyear", film.ReleaseYear.ToString()));
+                        cmd.Parameters.Add(new OracleParameter("releaseyear", 2017/*film.ReleaseYear.ToString()*/));
                         cmd.Parameters.Add(new OracleParameter("storyline", film.StoryLine));
+                        cmd.Parameters.Add(new OracleParameter("picture", film.ImagePath));
+
+                        cmd.Parameters.Add(new OracleParameter("filmID", film.ID));
                         cmd.Prepare();
                         cmd.ExecuteNonQuery();
                         return true;

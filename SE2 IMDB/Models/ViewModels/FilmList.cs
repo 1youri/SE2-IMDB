@@ -5,7 +5,7 @@ using System.Web;
 using SE2_IMDB.Models;
 using SE2_IMDB.Models.Entity;
 
-namespace SE2_IMDB.Models.ViewModels.Film
+namespace SE2_IMDB.Models.ViewModels
 {
     public class FilmList
     {

@@ -2,7 +2,9 @@
     padding-top: 50px;
     padding-bottom: 20px;
 }
-
+.footer {
+    font-size: 75%;
+}
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
@@ -13,6 +15,6 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 450px;
 }
 
