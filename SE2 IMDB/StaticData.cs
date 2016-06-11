@@ -15,5 +15,14 @@ namespace SE2_IMDB
             Message = "";
             return temp;
         }
+
+        public static string Confirmation { get; set; }
+
+        public static string GetAndResetConfirmation()
+        {
+            string temp = "" + Confirmation + "";
+            Confirmation = "";
+            return temp;
+        }
     }
 }

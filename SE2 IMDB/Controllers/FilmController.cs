@@ -37,14 +37,16 @@ namespace SE2_IMDB.Controllers
         [HttpPost]
         public ActionResult Create(Film film)
         {
-            if(ModelState.IsValid) if(Models.Repositories.FilmRepo.CreateFilm(film)) return RedirectToAction("Edit","Film", new {id = -1337});
+            if (ModelState.IsValid)
+                if (Models.Repositories.FilmRepo.CreateFilm(film))
+                    return RedirectToAction("Edit", "Film", new { id = -1337 });
             return View();
         }
 
         // GET: Film/Edit
         public ActionResult Edit(int id = 0)
         {
-            if (id < 0 && id != -1337) id = id*-1;
+            if (id < 0 && id != -1337) id = id * -1;
             Film film;
             if (id != 0)
             {
@@ -53,9 +55,9 @@ namespace SE2_IMDB.Controllers
                 List<Person> persons = FilmRepo.GetPersonsFromFilm(id);
                 film.Persons = FilmRepo.GetPersonsNotFromFilm(id, persons);
             }
-            else film = new Film() {ID = 0};
+            else film = new Film() { ID = 0 };
 
-            if (id == -1337) return RedirectToAction("Edit", "Film", new {id = film.ID});
+            if (id == -1337) return RedirectToAction("Edit", "Film", new { id = film.ID });
             return View(film);
         }
 
@@ -70,11 +72,11 @@ namespace SE2_IMDB.Controllers
                 if (upload != null && upload.ContentLength > 0)
                 {
                     string filePath = Path.Combine(HttpContext.Server.MapPath("../../Uploads/Films"),
-                                        Path.GetFileName(upload.FileName),
-                                        DateTime.Now.ToString("yyyyMMddHHmmssfff"));
+                        Path.GetFileName(upload.FileName),
+                        DateTime.Now.ToString("yyyyMMddHHmmssfff"));
                     upload.SaveAs(filePath);
                     film.ImagePath = upload.FileName;
-                    
+
                 }
                 if (Models.Repositories.FilmRepo.UpdateFilm(film))
                 {
@@ -90,9 +92,9 @@ namespace SE2_IMDB.Controllers
                     if (personsdiffer)
                         return RedirectToAction("Edit", "Film", new { id = film.ID });
 
-                    return RedirectToAction("Details","Film", new { id = film.ID} );
+                    return RedirectToAction("Details", "Film", new { id = film.ID });
                 }
-                
+
             }
 
             return View(film);
@@ -106,10 +108,34 @@ namespace SE2_IMDB.Controllers
             {
                 film = Models.Repositories.FilmRepo.GetFilm(id);
                 film.Persons = Models.Repositories.FilmRepo.GetPersonsFromFilm(id);
+
+                Account current = Account.GetID(System.Web.HttpContext.Current);
+                if (current.ID != 0)
+                {
+                    film.Like = LikeRepo.checkLike(current.ID, 0, id);
+                }
             }
+
+
+
             else film = new Film() { ID = 0 };
             return View(film);
         }
 
+        public ActionResult Score(int id = 0, int value = 0)
+        {
+            Account current = Account.GetID(System.Web.HttpContext.Current);
+            if (id != 0 && value != 0 && current.ID != 0 && (value == 1 || value == -1))
+            {
+                if (LikeRepo.UpdateLike(current.ID, value, 0, id))
+                {
+                    if(value == 1) StaticData.Confirmation = "Liked!";
+                    if(value == -1) StaticData.Confirmation = "Disliked!";
+                }
+                
+                
+            }
+            return RedirectToAction("Details", "Film", new { id = id });
+        }
     }
 }

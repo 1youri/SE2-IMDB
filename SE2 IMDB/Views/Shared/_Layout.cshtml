@@ -41,9 +41,15 @@
     </div>
 
 <div class="container body-content">
-    @if(StaticData.Message != null && StaticData.Message != "") {
+    @if(!string.IsNullOrEmpty(StaticData.Message)) {
             <div class="row text-center" style="background-color: #F2F5A9"> <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> @StaticData.GetAndResetMessage() </div>
-        } 
+    }
+    @if (!string.IsNullOrEmpty(StaticData.Confirmation))
+    {
+        <div class="row text-center" style="background-color: #BCF5A9"> <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> @StaticData.GetAndResetConfirmation() </div>
+    }
+
+    
 
     @RenderBody()
     <hr/>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SE2_IMDB.Models.Entity;
+using SE2_IMDB.Models.Repositories;
 using SE2_IMDB.Models.ViewModels;
 
 namespace SE2_IMDB.Controllers
@@ -84,9 +85,29 @@ namespace SE2_IMDB.Controllers
             {
                 person = Models.Repositories.PersonRepo.GetPerson(id);
                 person.Films = Models.Repositories.PersonRepo.GetPlayingFilms(id);
+
+                Account current = Account.GetID(System.Web.HttpContext.Current);
+                if (current.ID != 0)
+                {
+                    person.Like = LikeRepo.checkLike(current.ID, id, 0);
+                }
             }
             else person = new Person() { ID = -1 };
             return View(person);
+        }
+
+        public ActionResult Score(int id = 0, int value = 0)
+        {
+            Account current = Account.GetID(System.Web.HttpContext.Current);
+            if (id != 0 && value != 0 && current.ID != 0 && (value == 1 || value == -1))
+            {
+                if(LikeRepo.UpdateLike(current.ID, value, id, 0))
+                {
+                    if (value == 1) StaticData.Confirmation = "Liked!";
+                    if (value == -1) StaticData.Confirmation = "Disliked!";
+                }
+            }
+            return RedirectToAction("Details", "Person", new { id = id });
         }
     }
 }

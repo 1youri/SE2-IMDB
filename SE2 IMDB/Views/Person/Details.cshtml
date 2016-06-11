@@ -25,6 +25,37 @@
             <div class="col-md-offset-1 text-center">
                 <h2>@Model.Name</h2>
             </div>
+            <div class="row">
+                @if (current.ID != 0)
+                {
+                    <div class="col-md-12 text-right">
+                        @if (Model.Like != 1)
+                        {
+                            <a href="@Url.Action("Score", "Person", new {id = Model.ID, value = 1})">
+                                <img src="~/Uploads/upvoteclicked.png" style="height: 25px; width: 25px; padding-right: 0px;" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Score", "Person", new {id = Model.ID, value = 1})">
+                                <img src="~/Uploads/upvote.png" style="height: 25px; width: 25px; padding-right: 0px;" />
+                            </a>
+                        }
+                        @if (Model.Like != -1)
+                        {
+                            <a href="@Url.Action("Score", "Person", new {id = Model.ID, value = -1})">
+                                <img src="~/Uploads/downvoteclicked.png" style="height: 25px; width: 25px; padding-left: 0px;" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Score", "Person", new {id = Model.ID, value = -1})">
+                                <img src="~/Uploads/downvote.png" style="height: 25px; width: 25px; padding-left: 0px;" />
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
 
             <dl class="dl-horizontal">
                 <dt>

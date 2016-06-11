@@ -37,7 +37,7 @@ namespace SE2_IMDB.Models.Entity
         public bool Selected { get; set; }
 
         public List<Film> Films { get; set; }
-
+        public int Like { get; set; }
 
         public static List<Person> SortList(List<Person> persons, string mode = "")
         {

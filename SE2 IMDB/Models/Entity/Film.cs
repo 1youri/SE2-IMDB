@@ -48,6 +48,7 @@ namespace SE2_IMDB.Models.Entity
 
         public string Role { get; set; }
         public bool InPerson { get; set; }
+        public int Like { get; set; }
 
         /// <summary>
         /// 
