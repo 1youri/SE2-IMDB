@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #ffd129 !important;
 }
 .footer {
     font-size: 75%;
@@ -9,12 +10,18 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: rgba(255, 255, 255,0.9);
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 450px;
+    max-width: 100%;
+}
+.tableheader a{
+    color: black;
+    text-decoration: none;
+    white-space: nowrap;
 }
 

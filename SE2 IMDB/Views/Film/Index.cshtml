@@ -1,25 +1,34 @@
 ﻿@model SE2_IMDB.Models.ViewModels.FilmList
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Film List";
 }
 
-<h2>Index</h2>
+<h2>Films</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table table-hover" >
-    <tr>
+    <tr class="tableheader">
         <th>
-            @Html.DisplayNameFor(model => model.Films[0].Title)
+            <a href="@Url.Action("Index", "Film", new {sort = Model.SortList[0]})">
+                @Html.DisplayNameFor(model => model.Films[0].Title)
+                <span class="glyphicon glyphicon-sort"></span>
+            </a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Films[0].ReleaseYear)
+            <a href="@Url.Action("Index", "Film", new {sort = Model.SortList[1]})">
+                @Html.DisplayNameFor(model => model.Films[0].ReleaseYear)
+                <span class="glyphicon glyphicon-sort"></span>
+            </a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Films[0].Popularity)
-        </th>
+            <a href="@Url.Action("Index", "Film", new {sort = Model.SortList[2]})">
+                @Html.DisplayNameFor(model => model.Films[0].Popularity)
+                <span class="glyphicon glyphicon-sort"></span>
+            </a>
+</th>
         <th>
             @Html.DisplayNameFor(model => model.Films[0].Description)
         </th>

@@ -1,10 +1,11 @@
-﻿@model SE2_IMDB.Models.Entity.Film
+﻿@using SE2_IMDB.Models.Entity
+@model SE2_IMDB.Models.Entity.Film
 
 @{
-    ViewBag.Title = "Film Bewerken";
+    ViewBag.Title = "Edit Film";
 }
 
-<h2>Bewerken</h2>
+<h2>Edit</h2>
 
 @if (Model.ID > 0)
 {
@@ -16,39 +17,39 @@
             <h4>Film</h4>
             <hr />
             <div class="row">
-                <div class="col-md-8">
-                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                <div class="col-md-9">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.ID)
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-5">
-                            @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control", @rows = "6"}})
-                            @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @rows = "6" } })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ReleaseYear, htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.LabelFor(model => model.ReleaseYear, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.ReleaseYear, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.ReleaseYear, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.ReleaseYear, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ReleaseYear, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.StoryLine, htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.LabelFor(model => model.StoryLine, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.StoryLine, new {htmlAttributes = new {@class = "form-control", @rows = "6"}})
-                            @Html.ValidationMessageFor(model => model.StoryLine, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.StoryLine, new { htmlAttributes = new { @class = "form-control", @rows = "6" } })
+                            @Html.ValidationMessageFor(model => model.StoryLine, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -58,10 +59,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    
-                    @if (Model.ImagePath.Length > 1)
+                <div class="col-md-3">
+
+                    @if (Model.ImagePath == null || Model.ImagePath.Length > 1)
                     {
+                        @Html.HiddenFor(model => model.ImagePath)
                         <img src="@Url.Content("~/Uploads/Films/" + Model.ImagePath)" style="max-width: 100%; max-height: 300px" />
                     }
                     else
@@ -71,10 +73,11 @@
 
 
                     <div class="form-group">
-                        <p class="col-md-12"><strong>Change Image</strong>
+                        <p class="col-md-12">
+                            <strong>Change Image</strong>
                         </p>
                         <div class="col-md-12">
-                            <input type="file" id="Avatar" name="upload"/>
+                            <input type="file" id="Image" name="upload" />
                         </div>
                     </div>
                 </div>
@@ -82,12 +85,83 @@
             </div>
 
         </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-hover">
+                    <tr class="tableheader">
+                        <th></th>
+                        <th>Name</th>
+                        <th>Role</th>
+                    </tr>
+
+                    @for (int i = 0; i < Model.Persons.Count; i++)
+                    {
+                        if (Model.Persons[i].inFilm)
+                        {
+
+                            <tr>
+                                @Html.HiddenFor(modelItem => Model.Persons[i].ID)
+                                @Html.HiddenFor(modelItem => Model.Persons[i].inFilm, new {Value = "true"})
+                                @Html.HiddenFor(modelItem => Model.Persons[i].Name)
+                                <td>
+                                    @Html.CheckBoxFor(modelItem => Model.Persons[i].Selected)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Persons[i].Name)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(modelItem => Model.Persons[i].Role)
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table table-hover">
+                    <tr class="tableheader">
+                        <th></th>
+                        <th>@Html.DisplayNameFor(model => model.Persons[0].Name)</th>
+                    </tr>
+                    @for (int i = 0; i < Model.Persons.Count; i++)
+                    {
+                        if (!Model.Persons[i].inFilm)
+                        {
+
+                            <tr>
+                                @Html.HiddenFor(modelItem => Model.Persons[i].ID)
+                                @Html.HiddenFor(modelItem => Model.Persons[i].Name)
+                                @Html.HiddenFor(modelItem => Model.Persons[i].Role, new {Value = "-"})
+                                <td>
+                                    @Html.CheckBoxFor(modelItem => Model.Persons[i].Selected)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Persons[i].Name)
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-11">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
     }
+
+
 }
 else
 {
-    <h3>Film niet gevonden!</h3>
-    <p>Film met het ID: [ @(Model.ID * -1) ] kan niet worden gevonden, en dus ook niet worden aangepast.</p>
+    <h3>Film not found!</h3>
+    <p>Film with ID: [ @(Model.ID * -1) ] could not be found in the database and thus cannot be edited.</p>
 }
 
 
