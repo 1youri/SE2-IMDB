@@ -3,6 +3,13 @@
 
 @{
     ViewBag.Title = "Create Person";
+
+    Account current = Account.GetID(HttpContext.Current);
+    if (current.Role != "ADMINISTRATOR" && current.Role != "MODERATOR")
+    {
+        StaticData.Message = "You do not have enough priviliges to access this page!";
+        Response.Redirect("~/Home");
+    }
 }
 
 <h2>Create Person</h2>

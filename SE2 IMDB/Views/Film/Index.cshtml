@@ -1,15 +1,20 @@
-﻿@model SE2_IMDB.Models.ViewModels.FilmList
+﻿@using SE2_IMDB.Models.Entity
+@model SE2_IMDB.Models.ViewModels.FilmList
 
 @{
     ViewBag.Title = "Film List";
+
+    Account current = Account.GetID(HttpContext.Current);
 }
 
 <h2>Films</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table table-hover" >
+@if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+<table class="table table-hover">
     <tr class="tableheader">
         <th>
             <a href="@Url.Action("Index", "Film", new {sort = Model.SortList[0]})">
@@ -28,31 +33,38 @@
                 @Html.DisplayNameFor(model => model.Films[0].Popularity)
                 <span class="glyphicon glyphicon-sort"></span>
             </a>
-</th>
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Films[0].Description)
         </th>
+        @if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+        {
         <th></th>
+        }
     </tr>
 
-@foreach (var item in Model.Films) {
-    <tr style="cursor: pointer;" onclick="location.href='@Url.Action("Details", "Film", new { id=item.ID })'" >
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReleaseYear)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Popularity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.ActionLink(" Edit ", "Edit", new { id=item.ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Films)
+    {
+        <tr style="cursor: pointer;" onclick="location.href='@Url.Action("Details", "Film", new { id=item.ID })'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Popularity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            @if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+            {
+            <td>
+                @Html.ActionLink(" Edit ", "Edit", new { id = item.ID })
+            </td>
+            }
+        </tr>
+    }
 
 </table>

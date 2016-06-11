@@ -3,13 +3,17 @@
 
 @{
     ViewBag.Title = "Person List";
+
+    Account current = Account.GetID(HttpContext.Current);
 }
 
 <h2>Persons</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 <table class="table table-hover">
     <tr class="tableheader">
         <th>
@@ -27,7 +31,10 @@
         <th>
             @Html.DisplayNameFor(model => model.Persons[0].Description)
         </th>
-        <th></th>
+        @if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+        {
+            <th></th>
+        }
     </tr>
 
 @foreach (var item in Model.Persons) {
@@ -41,9 +48,12 @@
         <td>
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID })
-        </td>
+        @if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.ID})
+            </td>
+        }
     </tr>
 }
 

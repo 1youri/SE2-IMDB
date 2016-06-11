@@ -31,5 +31,13 @@ namespace SE2_IMDB.Controllers
 
             return View(account);
         }
+
+        // GET: Login/Logout
+        public ActionResult Logout()
+        {
+            HttpContext.Response.Cookies["SessionData"].Expires = DateTime.Now.AddDays(-1);
+            StaticData.Message = "Logout succesfull";
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

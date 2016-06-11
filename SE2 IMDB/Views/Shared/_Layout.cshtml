@@ -40,13 +40,17 @@
         </div>
     </div>
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p class="footer text-right"> &copy; @DateTime.Now.Year - Youri Schuurmans - Alle rechten voorbehouden</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @if(StaticData.Message != null && StaticData.Message != "") {
+            <div class="row text-center" style="background-color: #F2F5A9"> <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> @StaticData.GetAndResetMessage() </div>
+        } 
+
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p class="footer text-right"> &copy; @DateTime.Now.Year - Youri Schuurmans - Alle rechten voorbehouden</p>
+    </footer>
+</div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>

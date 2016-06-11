@@ -1,7 +1,15 @@
-﻿@model SE2_IMDB.Models.Entity.Person
+﻿@using SE2_IMDB.Models.Entity
+@model SE2_IMDB.Models.Entity.Person
 
 @{
     ViewBag.Title = "Edit";
+
+    Account current = Account.GetID(HttpContext.Current);
+    if (current.Role != "ADMINISTRATOR" && current.Role != "MODERATOR")
+    {
+        StaticData.Message = "You do not have enough priviliges to access this page!";
+        Response.Redirect("~/Home");
+    }
 }
 
 <h2>Edit</h2>

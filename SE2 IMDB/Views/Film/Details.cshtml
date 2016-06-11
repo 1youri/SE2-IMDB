@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "Details";
+    Account current = Account.GetID(HttpContext.Current);
 }
 
 
@@ -13,9 +14,12 @@
     <div class="col-md-12">
         <h2>Details</h2>
     </div>
-    <div class="col-md-12 text-right">
-        <h4> @Html.ActionLink("Edit", "Edit", new {id = Model.ID}) </h4>
-    </div>
+    if (current.Role == "ADMINISTRATOR" || current.Role == "MODERATOR")
+    {
+        <div class="col-md-12 text-right">
+            <h4> @Html.ActionLink("Edit", "Edit", new {id = Model.ID}) </h4>
+        </div>
+    }
     <hr/>
     <div class="row">
         <div class="col-md-8">
